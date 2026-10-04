@@ -393,6 +393,7 @@ class PlateraHandler(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "4173"))
-    with ThreadingHTTPServer(("127.0.0.1", port), PlateraHandler) as http_server:
-        print(f"Platera running at http://localhost:{port}", flush=True)
+    host = os.getenv("HOST", "127.0.0.1")
+    with ThreadingHTTPServer((host, port), PlateraHandler) as http_server:
+        print(f"Platera running at http://{host}:{port}", flush=True)
         http_server.serve_forever()
