@@ -2,6 +2,8 @@
 
 ### Serving culinary intelligence for the imperfect pantry.
 
+🌐 **Live App**: https://platera-culinary-intelligence.onrender.com/
+
 Platera turns the ingredients you already own into **three complete recipe ideas**. Choose a cuisine or explore different cuisines, compare estimated quality scores, follow numbered cooking steps, and keep useful recipes in a personal recipe box.
 
 > **The idea:** better cooking intelligence should begin with the food already in the room.
@@ -72,7 +74,7 @@ Create a local `.env` file in the root and set `GEMINI_API_KEY` to your key ther
 .\.venv\Scripts\python.exe server.py
 ```
 
-Open **http://localhost:4173** (or the port printed in the terminal), enter ingredients, choose a cuisine, and select **Generate Recipes**. The browser currently requests two servings with no dietary restriction. The API also accepts serving, diet, and time constraints.
+Open **https://platera-culinary-intelligence.onrender.com/** to use the live application, or run locally with **http://localhost:4173** (or the port printed in the terminal). Enter ingredients, choose a cuisine, and select **Generate Recipes**. The browser currently requests two servings with no dietary restriction. The API also accepts serving, diet, and time constraints.
 
 The Python gateway is required. Opening the HTML directly or using a static-only server does not provide recipe or photo APIs. Internet access is required for Gemini, photo sources, Tailwind CDN, and fonts. No Node.js build or Firebase account is needed.
 

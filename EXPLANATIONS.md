@@ -1,5 +1,7 @@
 # Platera: Technical Explanations
 
+🌐 **Live App**: https://platera-culinary-intelligence.onrender.com/
+
 This document explains the current project from the browser entry point to each user interaction. It is written so a new contributor, reviewer, or admissions reader can understand both the implementation and the reasoning behind it.
 
 ## 1. Product Model
