@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platera | Serving Culinary Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto">
+        <header class="text-center py-8 px-4">
+            <h1 class="text-6xl md:text-8xl text-stone-900 tracking-tighter playfair-display">Platera</h1>
+            <p class="text-lg md:text-xl text-stone-600 mt-2">Serving Culinary Intelligence</p>
+        </header>
+        <section class="mx-4 md:mx-8 lg:mx-12 my-8 rounded-2xl overflow-hidden shadow-strong">
+            <div class="relative h-80 md:h-[500px] w-full">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop" alt="A beautiful spread of delicious food on a table" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center p-4 text-center">
+                    <h2 class="text-4xl md:text-6xl text-white font-bold hero-text-shadow playfair-display">Endless recipes from the ingredients you have.</h2>
+                    <p class="text-white text-lg md:text-2xl mt-4 max-w-2xl hero-text-shadow">Stop wondering what to make. Start creating delicious meals with the help of AI.</p>
+                    <a href="#generator-section" class="mt-8 px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out">Try It Now</a>
+                </div>
+            </div>
+        </section>
+        <section class="text-center my-20 md:my-32 px-4">
+            <h2 class="text-4xl font-bold text-stone-800 playfair-display mb-12">A Smarter Way to Cook</h2>
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 justify-center">
+                <div class="flex flex-col items-center"><div class="bg-teal-100 rounded-full p-5 mb-4"><svg class="w-10 h-10 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg></div><h3 class="text-2xl font-semibold playfair-display mb-2">1. List Ingredients</h3><p class="text-stone-600">Tell our AI what you have in your fridge, pantry, or garden.</p></div>
+                <div class="flex flex-col items-center"><div class="bg-teal-100 rounded-full p-5 mb-4"><svg class="w-10 h-10 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547"></path></svg></div><h3 class="text-2xl font-semibold playfair-display mb-2">2. Get Recipes</h3><p class="text-stone-600">Receive creative, step-by-step recipes tailored to your items.</p></div>
+                <div class="flex flex-col items-center"><div class="bg-teal-100 rounded-full p-5 mb-4"><svg class="w-10 h-10 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><h3 class="text-2xl font-semibold playfair-display mb-2">3. AI Helpers</h3><p class="text-stone-600">Find ingredient substitutes and perfect wine pairings instantly.</p></div>
+            </div>
+        </section>
+        <section id="generator-section" class="max-w-2xl mx-auto bg-white rounded-2xl p-6 md:p-8 shadow-strong mt-16 scroll-mt-20">
+            <h3 class="text-3xl font-semibold mb-4 text-stone-800 text-center playfair-display">Ready to Cook?</h3>
+            <textarea id="ingredients-input" class="w-full p-4 border border-stone-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200 bg-stone-50" rows="4" maxlength="4000" aria-label="Available ingredients" placeholder="e.g., ground beef, onions, tomatoes, cheddar cheese..."></textarea>
+            <label for="cuisine-select" class="block mt-4 mb-2 text-sm font-medium text-stone-700">Cuisine</label>
+            <select id="cuisine-select" class="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-stone-50" disabled>
+                <option value="auto">Auto - explore different cuisines</option>
+            </select>
+            <button id="generate-btn" class="w-full mt-4 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out disabled:bg-stone-400 disabled:cursor-not-allowed disabled:transform-none">Generate Recipes</button>
+            <div class="flex flex-wrap items-center justify-between gap-2 mt-4 text-sm">
+                <span id="history-status" class="text-stone-500" aria-live="polite">Recent history: 0 recipes</span>
+                <button id="clear-history-btn" type="button" class="text-teal-700 hover:underline disabled:text-stone-400 disabled:cursor-not-allowed" disabled>Clear Recent History</button>
+            </div>
+            <div id="auth-status" class="text-center text-sm text-teal-700 mt-2" style="display: none;">Connecting to the kitchen...</div>
+        </section>
+        <div id="loader" class="text-center py-12" role="status" style="display: none;"><div class="inline-block w-10 h-10 border-4 border-teal-600 border-t-transparent rounded-full animate-spin"></div><p class="mt-3 text-stone-600">Prepping your recipes...</p></div>
+        <div id="error-display" class="max-w-2xl mx-auto mt-4 p-4 bg-red-100 text-red-700 rounded-lg shadow-sm" role="alert" style="display: none;"></div>
+        <section id="generated-recipes-section" class="mt-16 px-4 md:px-8" style="display: none;"><h2 class="text-4xl font-bold text-center mb-10 text-stone-800 playfair-display">Fresh Ideas For You</h2><div id="generated-recipes-container" class="max-w-4xl mx-auto space-y-8"></div></section>
+        <section id="saved-recipes-section" class="mt-20 pt-12 border-t-2 border-stone-200 px-4 md:px-8" style="display: none;"><h2 class="text-4xl font-bold text-center mb-10 text-stone-800 playfair-display">Your Personal Recipe Box</h2><div id="saved-recipes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"></div></section>
+    </div>
+    <dialog id="substitution-modal" aria-labelledby="substitution-title" class="fixed inset-0 z-50 items-center justify-center p-4 modal-backdrop"><div class="bg-white rounded-lg shadow-strong w-full max-w-md p-6 relative"><button id="close-sub-modal" aria-label="Close substitutions" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">&times;</button><h3 id="substitution-title" class="text-2xl font-bold mb-4 playfair-display">Find a Substitute</h3><p class="mb-4 text-stone-600">Select an ingredient to find substitutions for:</p><select id="ingredient-select" aria-label="Ingredient to substitute" class="w-full p-2 border border-gray-300 rounded mb-4"></select><button id="get-subs-btn" class="w-full bg-teal-600 text-white py-2 rounded">Get Suggestions</button><div id="substitutions-result" class="mt-4"></div></div></dialog>
+    <dialog id="wine-modal" aria-labelledby="wine-title" class="fixed inset-0 z-50 items-center justify-center p-4 modal-backdrop"><div class="bg-white rounded-lg shadow-strong w-full max-w-md p-6 relative"><button id="close-wine-modal" aria-label="Close wine pairings" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">&times;</button><h3 id="wine-title" class="text-2xl font-bold mb-4 playfair-display">AI Sommelier</h3><div id="wine-pairing-result" class="space-y-4"></div></div></dialog>
+    <footer class="text-center p-10 mt-20 bg-stone-800 text-stone-300"><p class="playfair-display text-2xl">Platera</p><p class="text-stone-400">&copy; 2025 Platera. Serving Culinary Intelligence.</p></footer>
+    <script src="js/config.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

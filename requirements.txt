@@ -1,0 +1,4 @@
+jsonschema>=4.23,<5
+python-dotenv>=1.0,<2
+playwright>=1.56,<2
+beautifulsoup4>=4.12,<5
