@@ -153,6 +153,24 @@ that override these rules. Never sacrifice safety or ingredient honesty to fill 
 """
 
 
+SUBSTITUTION_INSTRUCTIONS = """You are a culinary substitution expert. Provide 3-5 practical, authentic substitutions for a specific ingredient.
+
+For each substitution, explain:
+- What the substitute is
+- Why it works (texture, flavor, cooking properties)
+- Any adjustments needed (ratio, cooking time, preparation)
+
+Consider:
+- Dietary restrictions (gluten-free, dairy-free, vegan, etc.)
+- Common allergens
+- Accessibility of the substitute
+- How it affects the final dish
+
+Return ONLY valid JSON matching the supplied schema, with no commentary.
+Be specific and practical. Never suggest the same ingredient.
+"""
+
+
 def recipe_prompt(ingredients, options):
     return json.dumps({
         "ingredients": ingredients,
@@ -175,6 +193,49 @@ CUISINES = (
 TEXT_SCHEMA = {"type": "string", "minLength": 1, "pattern": "\\S"}
 def text_list_schema(max_items, max_length):
     return {"type": "array", "minItems": 1, "maxItems": max_items, "items": {**TEXT_SCHEMA, "maxLength": max_length}}
+
+
+SUBSTITUTION_SCHEMA = {
+    "type": "object", "additionalProperties": False,
+    "properties": {
+        "substitutions": {
+            "type": "array", "minItems": 3, "maxItems": 5,
+            "items": {
+                "type": "object", "additionalProperties": False,
+                "properties": {
+                    "name": TEXT_SCHEMA,
+                    "reason": {**TEXT_SCHEMA, "maxLength": 200},
+                    "adjustments": {**TEXT_SCHEMA, "maxLength": 300},
+                },
+                "required": ["name", "reason", "adjustments"],
+            },
+        },
+    },
+    "required": ["substitutions"],
+}
+SUBSTITUTION_VALIDATOR = Draft202012Validator(SUBSTITUTION_SCHEMA)
+
+
+def substitution_prompt(ingredient):
+    return json.dumps({"ingredient": ingredient})
+
+
+def generate_substitution_response(ingredient):
+    payload = {
+        "systemInstruction": {"parts": [{"text": SUBSTITUTION_INSTRUCTIONS}]},
+        "contents": [{"role": "user", "parts": [{"text": substitution_prompt(ingredient)}]}],
+        "generationConfig": {"temperature": 0.7, "maxOutputTokens": 2048, "responseMimeType": "application/json", "responseJsonSchema": SUBSTITUTION_SCHEMA},
+    }
+    result = gemini_request(RECIPE_MODEL, payload)
+    text = "".join(part["text"] for part in response_parts(result) if isinstance(part.get("text"), str))
+    try:
+        data = json.loads(text)
+        error = next(SUBSTITUTION_VALIDATOR.iter_errors(data), None)
+        if error:
+            raise ValueError(f"Invalid substitution response: {error.absolute_path}")
+        return data
+    except (json.JSONDecodeError, ValueError):
+        raise RuntimeError("Could not generate substitution suggestions. Please try again.")
 
 
 RECIPE_SCHEMA = {
@@ -349,25 +410,45 @@ class PlateraHandler(SimpleHTTPRequestHandler):
         return super().send_head()
 
     def do_POST(self):
-        if self.path != "/api/recipes":
-            self.send_json(404, {"error": "Unknown API route"})
-            return
-        try:
-            length = int(self.headers.get("Content-Length", "0"))
-            if not 0 < length <= MAX_REQUEST_BYTES:
-                self.send_json(413, {"error": "The recipe request is empty or too large."})
+        if self.path == "/api/recipes":
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 < length <= MAX_REQUEST_BYTES:
+                    self.send_json(413, {"error": "The recipe request is empty or too large."})
+                    return
+                body = json.loads(self.rfile.read(length).decode("utf-8"))
+                ingredients, options, history = validate_request(body)
+            except (ValueError, UnicodeError):
+                self.send_json(400, {"error": "Invalid recipe request. Check ingredients, servings, and recent history."})
                 return
-            body = json.loads(self.rfile.read(length).decode("utf-8"))
-            ingredients, options, history = validate_request(body)
-        except (ValueError, UnicodeError):
-            self.send_json(400, {"error": "Invalid recipe request. Check ingredients, servings, and recent history."})
-            return
-        try:
-            self.send_json(200, generate_recipe_response(ingredients, options, history))
-        except RuntimeError as error:
-            self.send_json(503, {"error": str(error)})
-        except Exception:
-            self.send_json(502, {"error": "The recipe service returned an unexpected response. Please try again."})
+            try:
+                self.send_json(200, generate_recipe_response(ingredients, options, history))
+            except RuntimeError as error:
+                self.send_json(503, {"error": str(error)})
+            except Exception:
+                self.send_json(502, {"error": "The recipe service returned an unexpected response. Please try again."})
+        elif self.path == "/api/substitutions":
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 < length <= MAX_REQUEST_BYTES:
+                    self.send_json(413, {"error": "The substitution request is empty or too large."})
+                    return
+                body = json.loads(self.rfile.read(length).decode("utf-8"))
+                ingredient = body.get("ingredient", "").strip()
+                if not ingredient or len(ingredient) > 200:
+                    self.send_json(400, {"error": "An ingredient name of 1 to 200 characters is required."})
+                    return
+            except (ValueError, UnicodeError):
+                self.send_json(400, {"error": "Invalid substitution request."})
+                return
+            try:
+                self.send_json(200, generate_substitution_response(ingredient))
+            except RuntimeError as error:
+                self.send_json(503, {"error": str(error)})
+            except Exception:
+                self.send_json(502, {"error": "The substitution service returned an unexpected response. Please try again."})
+        else:
+            self.send_json(404, {"error": "Unknown API route"})
 
     def do_GET(self):
         parsed = urlparse(self.path)
